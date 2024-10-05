@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from utils import send_to_hugging_face#, send_to_gemini
+from utils import send_to_hugging_face, send_to_gpt
 
 
 app = Flask(__name__)
@@ -21,13 +21,12 @@ def process_request():
         # Формируем запрос для Hugging Face
         hugging_face_response = send_to_hugging_face(prompt)
 
-        # # Формируем запрос для Gemini
-        # gemini_response = send_to_gemini(prompt)
+        gpt_response = send_to_gpt(prompt)
 
         # Возвращаем ответы от обеих моделей
         return jsonify({
             "hugging_face_response": hugging_face_response,
-            # "gemini_response": gemini_response
+            "gpt_response": gpt_response,
         })
 
     except Exception as e:

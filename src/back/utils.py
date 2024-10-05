@@ -1,18 +1,31 @@
-from config import BASE_PROMPT, hf_request_params, hf_client
+import requests
+
+from config import BASE_PROMPT, HF, GPT
 
 
 # Функция для отправки запроса на Hugging Face
 def send_to_hugging_face(request):
     result = []
 
-    hf_request_params["messages"] = [
+    HF["params"]["messages"] = [
         {"role": "system", "content": BASE_PROMPT}, {"role": "user", "content": request}
     ]
 
-    for message in hf_client.chat_completion(**hf_request_params):
+    for message in HF["client"].chat_completion(**HF["params"]):
         result.append(message.choices[0].delta.content)
     
     return "".join(result)
+
+
+# Функция для отправки запроса на gpt через rapid-api
+def send_to_gpt(request):
+    GPT["params"]["messages"] = [
+        {"role": "user", "content": request}
+    ]
+
+    response = requests.post(GPT["url"], json=GPT["params"], headers=GPT["headers"])
+
+    return response.json()["result"]
 
 
 # # Функция для отправки запроса на Gemini
