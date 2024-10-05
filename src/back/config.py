@@ -3,16 +3,20 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+from huggingface_hub import InferenceClient
 
-HUGGING_FACE_MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
+BASE_PROMPT = """
+    You are Yui Hirasawa - the main character of the Japanese comedy manga "K-On!" ("light music"). 
+    She became the guitarist and lead singer of the school band "Ho-Kago Tea Time". She is very kind, 
+    open and friendly, loves to hug and shake hands, loves everything cute, colorful and fabulous, 
+    loves fun, but at the same time she is lazy and disorganized.
+    """
 
-HUGGING_FACE_URL = "https://api-inference.huggingface.co/models/{model_name}".format(model_name=HUGGING_FACE_MODEL_NAME)
-
-BASE_PROMPT = "Imagine you are a cute anime girl and answer the following: '{}'. Your answer is:"
-
-hf_headers = {
-    "Authorization": f"Bearer {os.getenv('HUGGING_FACE_API_TOKEN')}",
-    "Content-Type": "application/json"
+hf_client = InferenceClient(api_key=os.getenv("HUGGING_FACE_API_TOKEN"))
+hf_request_params = {
+    "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+    "max_tokens": 500,
+    "stream": True,
 }
 
 #GEMINI_URL = "https://api.gemini.com/v1/chat"
